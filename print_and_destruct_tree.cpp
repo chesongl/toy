@@ -1,6 +1,6 @@
 //
 //  destructive tree serialization
-//  with minimal space complexity
+//  with O(1) space complexity
 //  tree nodes are being destructed at the same time
 //  usually during finalization phase of the process
 //
