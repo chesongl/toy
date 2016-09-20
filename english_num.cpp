@@ -47,7 +47,7 @@ void engnum_99(int64_t n, num_list_t & num_list)
 
 void engnum_999(int64_t n, num_list_t & num_list)
 {
-    if (n > 100) {
+    if (n >= 100) {
         num_list.push_back(ones[n / 100]);
 	num_list.push_back(space);
 	num_list.push_back(hundred);
@@ -57,7 +57,9 @@ void engnum_999(int64_t n, num_list_t & num_list)
 	    num_list.push_back(space);
 	}
     }
-    engnum_99(n % 100, num_list);
+    if (n % 100 > 0) {
+        engnum_99(n % 100, num_list);
+    }
 }
 
 void engnum(int64_t n, num_list_t & num_list)
@@ -121,7 +123,7 @@ string engnum(int64_t n)
 
 void print_engnum(int64_t n)
 {
-    cout << n << "\n\"" << engnum(n).c_str() << "\"" << endl;
+    cout << n << " \"" << engnum(n).c_str() << "\"" << endl;
 }
 
 int main(int argc, char** argv)
