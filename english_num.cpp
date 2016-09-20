@@ -1,4 +1,3 @@
-#include <list>
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -30,8 +29,6 @@ const char * comma    = ",";
 const char * space    = " ";
 const char * and      = "and";
 const char * dash     = "-";
-
-typedef list<const char*> num_list_t;
 
 void engnum_99(int64_t n, stringstream & s)
 {
