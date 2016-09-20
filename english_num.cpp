@@ -1,5 +1,6 @@
 #include <list>
 #include <iostream>
+#include <sstream>
 #include <algorithm>
 
 using namespace std;
@@ -32,47 +33,41 @@ const char * dash     = "-";
 
 typedef list<const char*> num_list_t;
 
-void engnum_99(int64_t n, num_list_t & num_list)
+void engnum_99(int64_t n, stringstream & s)
 {
     if (n < 20) {
-        num_list.push_back(ones[n]);
+	s << ones[n];
     } else {
-	num_list.push_back(ten_scale[n / 10]);
+	s << ten_scale[n / 10];
 	if (n % 10 > 0) {
-	    num_list.push_back(dash);
-            num_list.push_back(ones[n % 10]);
+	    s << dash << ones[n % 10];
 	}
     }
 }
 
-void engnum_999(int64_t n, num_list_t & num_list)
+void engnum_999(int64_t n, stringstream & s)
 {
     if (n >= 100) {
-        num_list.push_back(ones[n / 100]);
-	num_list.push_back(space);
-	num_list.push_back(hundred);
+	s << ones[n / 100] << space << hundred;
 	if (n % 100 > 0) {
-	    num_list.push_back(space);
-	    num_list.push_back(and);
-	    num_list.push_back(space);
+	    s << space << and << space;
 	}
     }
     if (n % 100 > 0) {
-        engnum_99(n % 100, num_list);
-    }
+        engnum_99(n % 100, s);
+    }    
 }
 
-void engnum(int64_t n, num_list_t & num_list)
+void engnum(int64_t n, stringstream & s)
 {
     if (n == 0) {
-	num_list.push_back(ones[0]);
+	s << ones[0];
 	return;
     }
     
     int bias_one = 0;
     if (n < 0) {
-	num_list.push_back(negative);
-	num_list.push_back(space);
+	s << negative << space;
         //  INT64_MIN is not addressable by the positive number.
         if (n == INT64_MIN) {
             bias_one = 1;
@@ -89,36 +84,30 @@ void engnum(int64_t n, num_list_t & num_list)
 	n %= scale;
 	if (hundreds > 0) {
 	    if (!first) {
-		num_list.push_back(space);
+		s << space;
 	    }
-	    engnum_999(hundreds, num_list);
-	    num_list.push_back(space);
-	    num_list.push_back(thousand_scale[i]);
+	    engnum_999(hundreds, s);
+	    s << space
+	      << thousand_scale[i];	    
 	    if (n > 0) {
-		num_list.push_back(comma);
+		s << comma;
 	    }
 	    first = false;
 	}
     }
     if (n > 0) {
 	if (!first) {
-	    num_list.push_back(space);
+	    s << space;
 	}
-	engnum_999(n + bias_one, num_list);
+	engnum_999(n + bias_one, s);
     }
 }
 
 string engnum(int64_t n)
 {
-    string numstr;
-    num_list_t nums;
-    engnum(n, nums);
-    for_each(nums.begin(),
-             nums.end(),
-             [&numstr] (const char * s) {
-                 numstr += s;
-             });
-    return numstr;
+    stringstream ss;
+    engnum(n, ss);
+    return ss.str();
 }
 
 void print_engnum(int64_t n)
